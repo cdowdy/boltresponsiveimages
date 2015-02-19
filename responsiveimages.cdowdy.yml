@@ -1,0 +1,9 @@
+sizes:
+  small: 300
+  mid: 640
+  medium: 800
+  large: 1100
+
+cropping: r
+
+
