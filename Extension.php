@@ -32,6 +32,7 @@ PFILL;
         // insert snippet after the last CSS file in the head
         $this->addSnippet( 'aftercss', $pictureFill );
 
+
         // for browsers that don't understand <picture> element
         $picElement = <<<PICELEM
 <script>document.createElement( "picture" );</script>
@@ -59,7 +60,7 @@ PICELEM;
      *
      * @return \Twig_Markup
      */
-    public function respImg( $filename = '', $width1 = 0, $width2 = 0, $width3 = 0, $width4 = 0, $sizing = '' )
+    public function respImg( $filename = '',  $sizing = '' )
     {
         /**
          * load up twig template directory
