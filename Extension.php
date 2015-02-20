@@ -29,13 +29,14 @@ class Extension extends BaseExtension
         $pictureFill   = <<<PFILL
 <script src="{$pictureFillJS}" async defer></script>
 PFILL;
+        // insert snippet after the last CSS file in the head
         $this->addSnippet( 'aftercss', $pictureFill );
 
         // for browsers that don't understand <picture> element
         $picElement = <<<PICELEM
 <script>document.createElement( "picture" );</script>
 PICELEM;
-
+        // insert snippet after the last CSS file in the head
         $this->addSnippet( 'aftercss', $picElement );
 
     }
