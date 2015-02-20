@@ -1,9 +1,26 @@
+# choose which responsive image soloution you would like to use.
+# <picture> element or <img srcset="image.jpg">
+
+imgSolution: imgSrcset
+
+# These are the image sizes you would like to use on your page.
+
 sizes:
   small: 300
   mid: 640
   medium: 800
   large: 1100
 
-cropping: r
+# -------------------------------------------------------------------------------------------------------------------- #
+#   This is for how you would like your image scaled down and or cropped.
+#   These options mimic bolts core thumbnail scaling options found here: https://docs.bolt.cm/templatetags#thumbnail
+#     - c for crop.
+#     - f for fit.
+#     - b for borders
+#     - r for resize
+# to resize an image you would use r as follows:
+# cropping: r
+
+cropping: f
 
 
