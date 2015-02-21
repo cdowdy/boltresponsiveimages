@@ -17,29 +17,6 @@ class Extension extends BaseExtension
     {
         $this->addTwigFunction( 'respImg', 'respImg' );
 
-        /**
-         * since there is no head function or any reliable way to insert anything in to the head in Bolt we have to
-         * hackishly insert picturefill into the head this way.
-         *
-         * first we assign a variable ($extensionsPath) to the base URL
-         * then insert that variable into a heredoc
-         */
-
-        $pictureFillJS = $this->getBaseUrl() . 'assets/picturefill.min.js';
-        $pictureFill   = <<<PFILL
-<script src="{$pictureFillJS}" async defer></script>
-PFILL;
-        // insert snippet after the last CSS file in the head
-        $this->addSnippet( 'aftercss', $pictureFill );
-
-
-        // for browsers that don't understand <picture> element
-        $picElement = <<<PICELEM
-<script>document.createElement( "picture" );</script>
-PICELEM;
-        // insert snippet after the last CSS file in the head
-        $this->addSnippet( 'aftercss', $picElement );
-
     }
 
     /**
@@ -53,20 +30,53 @@ PICELEM;
 
     /**
      * @param string $filename
-     * @param string $sizing
+     * @param string $cropping
      * @param string $altText
      * @param string $tag
      *
      * @return \Twig_Markup
      */
-    public function respImg( $filename = '',  $sizing = '', $altText = '', $tag = '' )
+    public function respImg( $filename = '',  $cropping = '', $altText = '', $tag = '', $sizes = '' )
     {
+
+        $this->addAssets();
         // load up twig template directory
         $this->app['twig.loader.filesystem']->addPath( __DIR__ . "/assets" );
 
-
-        // set variable for cropping to use in $sizing switch statement
+        // set variable for cropping to use in $cropping switch statement
         $thumbconf = $this->config['cropping'];
+
+        // After v1.5.1 we store image data as an array
+        if (is_array( $filename )) {
+            $filename = isset( $filename['filename'] ) ? $filename['filename'] : $filename['file'];
+        }
+
+
+        // switch statement to determine cropping/resizing of image
+        switch ($cropping) {
+            case 'fit':
+            case 'f':
+                $scale = 'f';
+                break;
+
+            case 'resize':
+            case 'r':
+                $scale = 'r';
+                break;
+
+            case 'borders':
+            case 'b':
+                $scale = 'b';
+                break;
+
+            case 'crop':
+            case 'c':
+                $scale = 'c';
+                break;
+
+            default:
+                $scale = ! empty( $thumbconf ) ? $thumbconf : 'c';
+        }
 
         // Bolt doesn't have alt text stored or a description for images so let the person using this twig tag to set it
         // if they don't set it strip the file extension and use that.. .even though that isn't a good enough alt text
@@ -92,10 +102,9 @@ PICELEM;
                 $template = 'respImg.srcset.html.twig';
         }
 
-
-        // After v1.5.1 we store image data as an array
-        if (is_array( $filename )) {
-            $filename = isset( $filename['filename'] ) ? $filename['filename'] : $filename['file'];
+        // set up sizes variable for img srcset
+        if ( empty( $sizes ) ) {
+            $sizes = '100vw';
         }
 
 
@@ -126,34 +135,6 @@ PICELEM;
             $width4 = $this->config['sizes']['large'];
         } else {
             $width4 = 1100;
-        }
-
-        /**
-         * switch statement to determine cropping/resizing of image
-         */
-        switch ($sizing) {
-            case 'fit':
-            case 'f':
-                $scale = 'f';
-                break;
-
-            case 'resize':
-            case 'r':
-                $scale = 'r';
-                break;
-
-            case 'borders':
-            case 'b':
-                $scale = 'b';
-                break;
-
-            case 'crop':
-            case 'c':
-                $scale = 'c';
-                break;
-
-            default:
-                $scale = ! empty( $thumbconf ) ? $thumbconf : 'c';
         }
 
 
@@ -207,10 +188,39 @@ PICELEM;
             'width2'   => $width2,
             'width3'   => $width3,
             'width4'   => $width4,
-            'altText'   => $altText
+            'altText'   => $altText,
+            'sizes'     => $sizes
         ) );
 
         return new \Twig_Markup( $imgSource, 'UTF-8' );
+    }
+
+    private function addAssets()
+    {
+
+        /**
+         * since there is no head function or any reliable way to insert anything in to the head in Bolt we have to
+         * hackishly insert picturefill into the head this way.
+         *
+         * first we assign a variable ($pictureFillJS) to the base URL
+         * then insert that variable into a heredoc
+         */
+
+        $pictureFillJS = $this->getBaseUrl() . 'assets/picturefill.min.js';
+        $pictureFill   = <<<PFILL
+<script src="{$pictureFillJS}" async defer></script>
+PFILL;
+        // insert snippet after the last CSS file in the head
+        $this->addSnippet( 'aftercss', $pictureFill );
+
+
+        // for browsers that don't understand <picture> element
+        $picElement = <<<PICELEM
+<script>document.createElement( "picture" );</script>
+PICELEM;
+        // insert snippet after the last CSS file in the head
+        $this->addSnippet( 'aftercss', $picElement );
+
     }
 
     public function isSafe()
