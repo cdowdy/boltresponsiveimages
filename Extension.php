@@ -55,10 +55,11 @@ PICELEM;
      * @param string $filename
      * @param string $sizing
      * @param string $altText
+     * @param string $tag
      *
      * @return \Twig_Markup
      */
-    public function respImg( $filename = '',  $sizing = '', $altText = '' )
+    public function respImg( $filename = '',  $sizing = '', $altText = '', $tag = '' )
     {
         // load up twig template directory
         $this->app['twig.loader.filesystem']->addPath( __DIR__ . "/assets" );
@@ -70,10 +71,25 @@ PICELEM;
         // Bolt doesn't have alt text stored or a description for images so let the person using this twig tag to set it
         // if they don't set it strip the file extension and use that.. .even though that isn't a good enough alt text
         // its better than having no alt text.
-        if (empty($altText) ) {
+        if ( empty( $altText ) ) {
 
-            $tempAltText = pathinfo($filename);
-            $altText = $tempAltText['filename'];
+            $tempAltText    = pathinfo($filename);
+            $altText        = $tempAltText['filename'];
+        }
+
+
+        // which responsive solution to use
+        switch( $tag ) {
+            case 'img':
+                $template = 'respImg.srcset.html.twig';
+                break;
+
+            case 'picture':
+                $template = 'respImg.picture.html.twig';
+                break;
+
+            default:
+                $template = 'respImg.srcset.html.twig';
         }
 
 
@@ -181,7 +197,7 @@ PICELEM;
         );
 
 
-        $imgSource = $this->app['render']->render( 'respImg.srcset.html.twig', array(
+        $imgSource = $this->app['render']->render( $template, array(
             'smallImg' => $smallImg,
             'midImg'   => $midImg,
             'medImg'   => $medImg,
