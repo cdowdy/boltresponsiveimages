@@ -2,7 +2,7 @@
 
 namespace Bolt\Extension\cdowdy\ResponsiveImages;
 
-use Bolt\Application;
+use Bolt;
 use Bolt\BaseExtension;
 use Bolt\Library as Lib;
 
@@ -50,27 +50,31 @@ PICELEM;
         return "responsiveimages";
     }
 
+
     /**
      * @param string $filename
-     * @param int $width1
-     * @param int $width2
-     * @param int $width3
-     * @param int $width4
      * @param string $sizing
+     * @param string $altText
      *
      * @return \Twig_Markup
      */
-    public function respImg( $filename = '',  $sizing = '' )
+    public function respImg( $filename = '',  $sizing = '', $altText = '' )
     {
-        /**
-         * load up twig template directory
-         */
+        // load up twig template directory
         $this->app['twig.loader.filesystem']->addPath( __DIR__ . "/assets" );
 
-        /**
-         * set variable for cropping to use in $sizing switch statement
-         */
+
+        // set variable for cropping to use in $sizing switch statement
         $thumbconf = $this->config['cropping'];
+
+        // Bolt doesn't have alt text stored or a description for images so let the person using this twig tag to set it
+        // if they don't set it strip the file extension and use that.. .even though that isn't a good enough alt text
+        // its better than having no alt text.
+        if (empty($altText) ) {
+
+            $tempAltText = pathinfo($filename);
+            $altText = $tempAltText['filename'];
+        }
 
 
         // After v1.5.1 we store image data as an array
@@ -78,9 +82,8 @@ PICELEM;
             $filename = isset( $filename['filename'] ) ? $filename['filename'] : $filename['file'];
         }
 
-        /**
-         * Get the Sizes for the Images
-         */
+
+        //  Get the Sizes for the Images
         // small image
         if (isset( $this->config['sizes']['small'][0] )) {
             $width1 = $this->config['sizes']['small'][0];
@@ -187,10 +190,16 @@ PICELEM;
             'width1'   => $width1,
             'width2'   => $width2,
             'width3'   => $width3,
-            'width4'   => $width4
+            'width4'   => $width4,
+            'altText'   => $altText
         ) );
 
         return new \Twig_Markup( $imgSource, 'UTF-8' );
+    }
+
+    public function isSafe()
+    {
+        return true;
     }
 
 }
