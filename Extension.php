@@ -36,22 +36,22 @@ class Extension extends BaseExtension
      *
      * @return \Twig_Markup
      */
-    public function respImg( $filename = '',  $cropping = '', $altText = '', $tag = '', $sizes = '' )
+    public function respImg( $filename = '', $cropping = '', $altText = '', $tag = '', $sizes = '' )
     {
-
+        // only load picturefill js on pages conatining respImg twig tag
         $this->addAssets();
+
         // load up twig template directory
         $this->app['twig.loader.filesystem']->addPath( __DIR__ . "/assets" );
 
-        // set variable for cropping to use in $cropping switch statement
-        $thumbconf = $this->config['cropping'];
 
         // After v1.5.1 we store image data as an array
         if (is_array( $filename )) {
             $filename = isset( $filename['filename'] ) ? $filename['filename'] : $filename['file'];
         }
 
-
+        // set variable for cropping to use in $cropping switch statement
+        $thumbconf = $this->config['cropping'];
         // switch statement to determine cropping/resizing of image
         switch ($cropping) {
             case 'fit':
@@ -87,21 +87,6 @@ class Extension extends BaseExtension
             $altText        = $tempAltText['filename'];
         }
 
-
-        // which responsive solution to use
-        switch( $tag ) {
-            case 'img':
-                $template = 'respImg.srcset.html.twig';
-                break;
-
-            case 'picture':
-                $template = 'respImg.picture.html.twig';
-                break;
-
-            default:
-                $template = 'respImg.srcset.html.twig';
-        }
-
         // set up sizes variable for img srcset
         if ( empty( $sizes ) ) {
             $sizes = '100vw';
@@ -110,8 +95,8 @@ class Extension extends BaseExtension
 
         //  Get the Sizes for the Images
         // small image
-        if (isset( $this->config['sizes']['small'][0] )) {
-            $width1 = $this->config['sizes']['small'][0];
+        if (isset( $this->config['sizes']['small'] )) {
+            $width1 = $this->config['sizes']['small'];
         } else {
             $width1 = 320;
         }
@@ -137,7 +122,8 @@ class Extension extends BaseExtension
             $width4 = 1100;
         }
 
-
+        // Set Height to 0 for proportional scaling:
+        $height = 0;
         // Test For Small Images
         // Get the image path ( either by filename or record.image )
         // then get the widths, crop
@@ -145,7 +131,7 @@ class Extension extends BaseExtension
             '%sthumbs/%sx%s%s/%s',
             $this->app['paths']['root'],
             round( $width1 ),
-            round( $height1 ),
+            $height,
             $scale,
             Lib::safeFilename( $filename )
         );
@@ -154,7 +140,7 @@ class Extension extends BaseExtension
             '%sthumbs/%sx%s%s/%s',
             $this->app['paths']['root'],
             round( $width2 ),
-            round( $height2 ),
+            $height,
             $scale,
             Lib::safeFilename( $filename )
         );
@@ -163,7 +149,7 @@ class Extension extends BaseExtension
             '%sthumbs/%sx%s%s/%s',
             $this->app['paths']['root'],
             round( $width3 ),
-            round( $height3 ),
+            $height,
             $scale,
             Lib::safeFilename( $filename )
         );
@@ -172,7 +158,7 @@ class Extension extends BaseExtension
             '%sthumbs/%sx%s%s/%s',
             $this->app['paths']['root'],
             round( $width4 ),
-            round( $height4 ),
+            $height,
             $scale,
             Lib::safeFilename( $filename )
         );
@@ -194,6 +180,8 @@ class Extension extends BaseExtension
 
         return new \Twig_Markup( $imgSource, 'UTF-8' );
     }
+
+
 
     private function addAssets()
     {
