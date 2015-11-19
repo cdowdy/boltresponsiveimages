@@ -1,0 +1,23 @@
+# To use picturefill for older browsers that don't recoginize img srcset
+picturefill: true
+
+# Default Thumbnail and size settings
+# These will be global image thumbnail sizes, cropping method
+# we use heights: [ 0 ] for proportional scaling of the image
+# we also use strings in the array for the sizes attribute ex: sizes: [ '(min-width: 40em) 80vw', '100vw' ]
+# if you only want one size (ex: 100vw) then it looks as follows: sizes: [ '100vw' ]
+default:
+  widths: [ 320, 480, 768 ]
+  heights: [ 0 ]
+  sizes: [  '(min-width: 40em) 80vw', '100vw'  ]
+  cropping: resize
+  altText:
+
+
+
+articles:
+  widths: [346, 800, 1000 ]
+  heights: [ 0 ]
+  sizes: [ '100vw' ]
+  cropping: crop
+  altText:
