@@ -1,0 +1,6 @@
+
+
+<img sizes="{% for s in size %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
+     srcset="{% for key, value in combinedSize %}{{ key }} {{ value }}w{% if not loop.last  %},{% endif %}{% endfor %}"
+
+     alt="{{ alt }}" >
