@@ -1,28 +1,30 @@
 {
-    "name": "cdowdy/ResponsiveImages",
-    "description": "A description about your extension should go here.",
-    "type": "bolt-extension",
-    "keywords": ["responsive images", "picturefill", "picture element", "img srcset" ],
-    "require": {
-        "bolt/bolt": ">=2.0.0,<3.0.0"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Cory Dowdy",
-            "email": "Cory@corydowdy.com"
-        }
-    ],
-    "autoload": {
-        "files": [
-            "init.php"
-        ],
-        "psr-4": {
-            "Bolt\\Extension\\cdowdy\\ResponsiveImages\\": ""
-        }
-    },
-    
-    "extra": {
-        "bolt-assets": "assets"
+  "name": "cdowdy/boltresponsiveimages",
+  "description": "A Bolt Extension To Create Responsive Images.",
+  "type": "bolt-extension",
+  "keywords": ["srcset", "responsive images"],
+  "require": {
+    "bolt/bolt": ">=2.0,<3.0"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cory Dowdy",
+      "email": "cory@corydowdy.com"
     }
+  ],
+  "minimum-stability" : "dev",
+  "prefer-stable" : true,
+  "autoload": {
+    "files": [
+      "init.php"
+    ],
+    "psr-4": {
+      "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\": ["", "src/"],
+    }
+  },
+
+  "extra": {
+    "bolt-assets": "assets"
+  }
 }
