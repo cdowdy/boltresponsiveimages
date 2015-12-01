@@ -41,43 +41,43 @@ class Extension extends BaseExtension
 		// gather the default options, merge them with any options passed in the template
 		$defaultOptions = $this->getOptions( $file, $configName, $options );
 
-		$optionsWidths =  $this->getOptions( $file, $configName, $options )['widths'];
-		$optionHeights = $this->getOptions( $file, $configName, $options)['heights'];
+		$optionsWidths = $this->getOptions( $file, $configName, $options )[ 'widths' ];
+		$optionHeights = $this->getOptions( $file, $configName, $options )[ 'heights' ];
 
 		// get the alt text for the Image
 		$altText = $this->getAltText( $configName, $file );
 		// get size attribute if using the W descriptor
-		$sizeAttrib = $this->getOptions( $file, $configName, $options)['sizes'];
+		$sizeAttrib = $this->getOptions( $file, $configName, $options )[ 'sizes' ];
 
 		// Combine the Heights and Widths to use for our thumbnail parameters
-		$sizeArray = $this->getCombinedSizes( $optionsWidths, $optionHeights);
+		$sizeArray = $this->getCombinedSizes( $optionsWidths, $optionHeights );
 
 		// get what we need for the cropping parameter
-		$cropping = $this->getOptions( $file, $configName, $options)['cropping'];
+		$cropping = $this->getOptions( $file, $configName, $options )[ 'cropping' ];
 
-		$densityWidth = $this->getOptions( $file, $configName, $options )['widthDensity'];
+		$densityWidth = $this->getOptions( $file, $configName, $options )[ 'widthDensity' ];
 
 		// make thumbs an empty array
 		$thumb = array();
 		// loop through the size array and generate a thumbnail and URL
 		// place those in an array to be used in the twig template
-		foreach ( $sizeArray as $key => $value) {
-			$thumb[] .= $this->thumbnail($file, $key, $value, $cropping);
+		foreach ( $sizeArray as $key => $value ) {
+			$thumb[] .= $this->thumbnail( $file, $key, $value, $cropping );
 			// . ' '. $densityWidth
 		}
 
 		// use the array below if using the W descriptor
 		if ( $densityWidth == 'w' ) {
-			$combinedImages = array_combine( $thumb, $optionsWidths);
+			$combinedImages = array_combine( $thumb, $optionsWidths );
 		}
 		// get the smallest (first sizes in the size array) heights and widths for the src image
-		$srcThumbWidth = $this->getOptions( $file, $configName, $options)['widths'][0];
-		$srcThumbHeight = $this->getOptions( $file, $configName, $options)['heights'][0];
+		$srcThumbWidth = $this->getOptions( $file, $configName, $options )[ 'widths' ][ 0 ];
+		$srcThumbHeight = $this->getOptions( $file, $configName, $options )[ 'heights' ][ 0 ];
 //		$srcSizeArray = $this->getCombinedSizes( $srcThumbWidth, $srcThumbHeight);
 
 		// if not using picturefill place the smallest image in the "src" attribute of the img tag
 		// <img srcset="" src="smallest image here" alt="alt text" >
-		$srcThumb = $this->thumbnail( $file, $srcThumbWidth, $srcThumbHeight, $cropping);
+		$srcThumb = $this->thumbnail( $file, $srcThumbWidth, $srcThumbHeight, $cropping );
 
 		// load up twig template directory
 		$this->app[ 'twig.loader.filesystem' ]->addPath( __DIR__ . "/assets" );
@@ -100,6 +100,7 @@ class Extension extends BaseExtension
 
 	/**
 	 * @param $name
+	 *
 	 * @return string
 	 *
 	 * get the config name. If no name is passed in the twig function then use
@@ -114,7 +115,7 @@ class Extension extends BaseExtension
 
 		} else {
 
-			$configName =  $name ;
+			$configName = $name;
 
 		}
 
@@ -123,28 +124,29 @@ class Extension extends BaseExtension
 
 
 
-/*	function defaultOptions( $config, $option ) {
-		$configName = $this->getConfigName( $config );
+	/*	function defaultOptions( $config, $option ) {
+			$configName = $this->getConfigName( $config );
 
 
-		if ( isset( $option ) && !empty( $option ) ) {
-			$defOption = $this->config[$configName][$option];
-		} else {
-			$defOption = $this->config['default'][$option];
-		}
+			if ( isset( $option ) && !empty( $option ) ) {
+				$defOption = $this->config[$configName][$option];
+			} else {
+				$defOption = $this->config['default'][$option];
+			}
 
-		if ( is_null($option)) {
-			$defOption = $this->config['default'][$option];
-		}
+			if ( is_null($option)) {
+				$defOption = $this->config['default'][$option];
+			}
 
-		return $defOption;
+			return $defOption;
 
-	}*/
+		}*/
 
 	/**
-	 * @param $filename
-	 * @param $config
+	 * @param       $filename
+	 * @param       $config
 	 * @param array $options
+	 *
 	 * @return array
 	 *
 	 * Get the default options
@@ -152,17 +154,16 @@ class Extension extends BaseExtension
 	function getOptions( $filename, $config, $options = array() )
 	{
 
-		$configName     = $this->getConfigName( $config );
+		$configName = $this->getConfigName( $config );
 //		$defaultWidths   = $this->getImageWidths( $configName);
 //		$defaultHeights = $this->getImageHeights( $configName);
 		$defaultWidths = $this->getWidthsHeights( $configName, 'widths' );
 		$defaultHeights = $this->getWidthsHeights( $configName, 'heights' );
-		$cropping       = $this->getCropping( $configName);
-		$altText        = $this->getAltText( $configName, $filename );
-		$widthDensity   = $this->getWidthDensity( $configName);
-		$sizes          = $this->getSizesAttrib( $configName);
-		$class          = $this->getHTMLClass( $configName);
-
+		$cropping = $this->getCropping( $configName );
+		$altText = $this->getAltText( $configName, $filename );
+		$widthDensity = $this->getWidthDensity( $configName );
+		$sizes = $this->getSizesAttrib( $configName );
+		$class = $this->getHTMLClass( $configName );
 
 
 		$defaults = array(
@@ -208,7 +209,8 @@ class Extension extends BaseExtension
 	 *
 	 * @return mixed
 	 */
-	function getWidthsHeights( $config , $option ) {
+	function getWidthsHeights( $config, $option )
+	{
 
 		$configName = $this->getConfigName( $config );
 		$configOption = $this->config[ $configName ][ $option ];
@@ -222,36 +224,36 @@ class Extension extends BaseExtension
 		return $configParam;
 	}
 
-/*
-	function getImageWidths( $config ) {
+	/*
+		function getImageWidths( $config ) {
 
-		$configName = $this->getConfigName( $config );
-		$configWidths = $this->config[ $configName ]['widths'];
+			$configName = $this->getConfigName( $config );
+			$configWidths = $this->config[ $configName ]['widths'];
 
-		if ( isset( $configWidths ) && !empty($configWidths) ) {
-			$widths = $this->config[$configName]['widths'];
-		} else {
-			$widths = $this->config['default']['widths'];
+			if ( isset( $configWidths ) && !empty($configWidths) ) {
+				$widths = $this->config[$configName]['widths'];
+			} else {
+				$widths = $this->config['default']['widths'];
+			}
+
+			return $widths;
 		}
 
-		return $widths;
-	}
+		function getImageHeights( $config ) {
 
-	function getImageHeights( $config ) {
+			// get the config name
+			$configName = $this->getConfigName( $config );
+			// then the config heights
+			$configHeights = $this->config[ $configName ]['heights'];
 
-		// get the config name
-		$configName = $this->getConfigName( $config );
-		// then the config heights
-		$configHeights = $this->config[ $configName ]['heights'];
+			if ( isset( $configHeights ) && !empty($configHeights) ) {
+				$heights = $this->config[$configName]['heights'];
+			} else {
+				$heights = $this->config['default']['heights'];
+			}
 
-		if ( isset( $configHeights ) && !empty($configHeights) ) {
-			$heights = $this->config[$configName]['heights'];
-		} else {
-			$heights = $this->config['default']['heights'];
-		}
-
-		return $heights;
-	}*/
+			return $heights;
+		}*/
 
 
 	/**
@@ -260,7 +262,7 @@ class Extension extends BaseExtension
 	 *
 	 * @return array
 	 */
-	function getCombinedSizes(  $widths, $heights )
+	function getCombinedSizes( $widths, $heights )
 	{
 
 		$widthCount = count( $widths );
@@ -289,14 +291,15 @@ class Extension extends BaseExtension
 	 *
 	 * @return mixed
 	 */
-	function getWidthDensity( $config ) {
+	function getWidthDensity( $config )
+	{
 		$configName = $this->getConfigName( $config );
-		$widthDensity = $this->config[ $configName ]['widthDensity'];
+		$widthDensity = $this->config[ $configName ][ 'widthDensity' ];
 
-		if (isset( $widthDensity ) &&!empty( $widthDensity ) ) {
+		if ( isset( $widthDensity ) && !empty( $widthDensity ) ) {
 			$wd = $this->config[ $configName ][ 'widthDensity' ];
 		} else {
-			$wd = $this->config['default']['widthDensity'];
+			$wd = $this->config[ 'default' ][ 'widthDensity' ];
 		}
 
 		return $wd;
@@ -307,14 +310,15 @@ class Extension extends BaseExtension
 	 *
 	 * @return mixed
 	 */
-	function getCropping( $config ) {
+	function getCropping( $config )
+	{
 		$configName = $this->getConfigName( $config );
-		$cropping = $this->config[ $configName ]['cropping'];
+		$cropping = $this->config[ $configName ][ 'cropping' ];
 
-		if (isset( $cropping ) &&!empty( $cropping ) ) {
+		if ( isset( $cropping ) && !empty( $cropping ) ) {
 			$crop = $this->config[ $configName ][ 'cropping' ];
 		} else {
-			$crop = $this->config['default']['cropping'];
+			$crop = $this->config[ 'default' ][ 'cropping' ];
 		}
 
 		return $crop;
@@ -325,14 +329,15 @@ class Extension extends BaseExtension
 	 *
 	 * @return mixed
 	 */
-	function getSizesAttrib( $config ) {
+	function getSizesAttrib( $config )
+	{
 		$configName = $this->getConfigName( $config );
-		$sizes = $this->config[ $configName ]['sizes'];
+		$sizes = $this->config[ $configName ][ 'sizes' ];
 
-		if (isset( $sizes ) &&!empty( $sizes ) ) {
+		if ( isset( $sizes ) && !empty( $sizes ) ) {
 			$sizesAttrib = $this->config[ $configName ][ 'sizes' ];
 		} else {
-			$sizesAttrib = $this->config['default']['sizes'];
+			$sizesAttrib = $this->config[ 'default' ][ 'sizes' ];
 		}
 
 		return $sizesAttrib;
@@ -343,14 +348,15 @@ class Extension extends BaseExtension
 	 *
 	 * @return mixed
 	 */
-	function getHTMLClass( $config ) {
+	function getHTMLClass( $config )
+	{
 		$configName = $this->getConfigName( $config );
-		$htmlClass = $this->config[ $configName ]['class'];
+		$htmlClass = $this->config[ $configName ][ 'class' ];
 
-		if (isset( $htmlClass ) &&!empty( $htmlClass ) ) {
+		if ( isset( $htmlClass ) && !empty( $htmlClass ) ) {
 			$class = $this->config[ $configName ][ 'class' ];
 		} else {
-			$class = $this->config['default']['class'];
+			$class = $this->config[ 'default' ][ 'class' ];
 		}
 
 		return $class;
@@ -418,6 +424,7 @@ class Extension extends BaseExtension
 
 		return $path;
 	}
+
 	/**
 	 * Add Picturefill to the current page!!!
 	 */
