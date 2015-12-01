@@ -1,6 +1,13 @@
 
+{% if widthDensity == 'w' %}
+    <img sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
+         srcset="{% for img, width in combinedImages %}{{ img }} {{ width }}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"
+         src="{{ srcThumb }}"
+         alt="{{ alt }}">
+{% endif %}
 
-<img sizes="{% for s in size %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
-     srcset="{% for key, value in combinedSize %}{{ key }} {{ value }}w{% if not loop.last  %},{% endif %}{% endfor %}"
-
-     alt="{{ alt }}" >
+{% if widthDensity == 'x' %}
+<img srcset="{% for img in thumb %}{{ img }} {{ loop.index }}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"
+     src="{{ srcThumb }}"
+     alt="{{ alt }}">
+{% endif %}
