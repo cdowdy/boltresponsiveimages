@@ -29,17 +29,24 @@ class Extension extends BaseExtension
 	}
 
 
-	// originally had  array $options = array() to pass in height and width options
-	// but I can't get it to work because my PHP skills are baaaaad
 	public function respImg( $file, $name, array $options = array() )
 	{
 
-		$this->addAssets();
+		$pfill = false;
+		// add picturefill if its set to true in the extension config. Defaults to true
+		if ($this->config['picturefill'] == true ) {
+			$this->addAssets();
+			$pfill = true;
+		}
 		// get the config file name if using one. otherwise its 'default'
 		$configName = $this->getConfigName( $name );
 
 		// gather the default options, merge them with any options passed in the template
 		$defaultOptions = $this->getOptions( $file, $configName, $options );
+
+
+		// if a class is set in the config or options pass it to the template
+		$htmlClass = $this->getOptions( $file, $configName, $options)['class'];
 
 		$optionsWidths = $this->getOptions( $file, $configName, $options )[ 'widths' ];
 		$optionHeights = $this->getOptions( $file, $configName, $options )[ 'heights' ];
@@ -83,18 +90,20 @@ class Extension extends BaseExtension
 		$this->app[ 'twig.loader.filesystem' ]->addPath( __DIR__ . "/assets" );
 
 
-		$support = $this->app[ 'render' ]->render( 'respimg.twig', array(
+		$renderImg = $this->app[ 'render' ]->render( 'respimg.twig', array(
 			'alt' => $altText,
 			'sizes' => $sizeAttrib,
 			'options' => $defaultOptions,
 			'widthDensity' => $densityWidth,
 			'combinedImages' => $combinedImages,
 			'thumb' => $thumb,
-			'srcThumb' => $srcThumb
+			'srcThumb' => $srcThumb,
+			'class' => $htmlClass,
+			'pfill' => $pfill
 
 		) );
 
-		return new \Twig_Markup( $support, 'UTF-8' );
+		return new \Twig_Markup( $renderImg, 'UTF-8' );
 	}
 
 
