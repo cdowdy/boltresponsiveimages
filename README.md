@@ -1,12 +1,12 @@
 # bolt-repsponsive-images  
-____________________  
+
 
 Responsive Image Extension for Bolt CMS. Using picturefill and img srcset  
 
 # This is currently in beta :-)  
 
 # Quick Usage With Defaults:  
-______________________  
+  
 
 In your template place this tag wherever you want a responsive image set:  
  
@@ -41,8 +41,7 @@ Here is how the markup will look:
     alt="filename is used for alt text">  
 ```  
 
-## Tag Explanation  
-______________  
+## Tag Explanation   
 
 To use this Responsive Image Bolt Extension you can either use the defaults above or define a set of rules the the extension config as follows.  
   
@@ -133,7 +132,6 @@ After you have your settings in the config file you can now use these in your te
 
 
 ## Advanced Usage  
-_______________    
 
 you can override just about any of the following settings from your defined configurations.  
 
