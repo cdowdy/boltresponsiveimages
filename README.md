@@ -45,14 +45,14 @@ Here is how the markup will look:
 
 To use this Responsive Image Bolt Extension you can either use the defaults above or define a set of rules the the extension config as follows.  
   
-1. Give it a Name.
+1). Give it a Name.
 
 ```yaml  
 # default rule set above here
 blogposts:  
 ```  
 
-2. Define a set of widths. If left empty will default to the widths set in "default"   
+2). Define a set of widths. If left empty will default to the widths set in "default"   
 
 ```yaml  
 blogposts:  
@@ -66,7 +66,7 @@ blogposts:
   widths: [ 0 ]  
 ```  
 
-3. Define a set of heights. Use 0 (zero) if you want to proportionally scale the height to the new widths. If left empty defaults to 0 (zero)  
+3). Define a set of heights. Use 0 (zero) if you want to proportionally scale the height to the new widths. If left empty defaults to 0 (zero)  
 
 ```yaml  
 blogposts:
@@ -74,7 +74,7 @@ blogposts:
   heights: [ 0 ]  
 ```  
 
-4. Define if you want to use the Image Width (w) or Screen density (x) to determine which image to use. If left empty defaults to "w"  
+4). Define if you want to use the Image Width (w) or Screen density (x) to determine which image to use. If left empty defaults to "w"  
 
 ```yaml  
 blogposts:
@@ -83,7 +83,7 @@ blogposts:
   widthDensity: 'w'  
 ```  
 
-5. Determine your sizes if using the W descriptor. Defaults to "100vw".  
+5). Determine your sizes if using the W descriptor. Defaults to "100vw".  
 
 ```yaml  
 blogposts:
@@ -93,7 +93,7 @@ blogposts:
   sizes: [ '(min-width: 40em) 80vw', '100vw' ]  
 ```  
 
-6. Choose how you want to image cropped. Options are the same as a regular bolt thumbnail. Defaults to either "resize" or whatever is set in "default"    
+6). Choose how you want to image cropped. Options are the same as a regular bolt thumbnail. Defaults to either "resize" or whatever is set in "default"    
 
 * crop ( crop or c )  
 * resize  ( resize or r ) 
@@ -109,7 +109,7 @@ blogposts:
   cropping: resize  
 ```  
    
-7. Finally determine your Alt text and if you need an additional class for styling. Alt text should be supplied by you the user. Otherwise it will fall back to the filename which in most instances isn't good alt text.  
+7). Finally determine your Alt text and if you need an additional class for styling. Alt text should be supplied by you the user. Otherwise it will fall back to the filename which in most instances isn't good alt text.  
  
 ```yaml  
 blogposts:
