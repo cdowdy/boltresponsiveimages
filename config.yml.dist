@@ -17,7 +17,7 @@ default:
   widths: [ 320, 480, 768 ]
   heights: [ 0 ]
   widthDensity: 'w'
-  sizes: [  '(min-width: 40em) 80vw', '100vw'  ]
+  sizes: [ '100vw'  ]
   cropping: resize
   altText:
   class:
@@ -25,10 +25,10 @@ default:
 
 
 articles:
-  widths: []
+  widths: [ 340, 680, 1260 ]
   heights: [ 0 ]
-  widthDensity:
-  sizes: []
+  widthDensity: 'w'
+  sizes: [ '(min-width: 40em) 80vw', '100vw' ]
   cropping: fit
   altText:
   class:
