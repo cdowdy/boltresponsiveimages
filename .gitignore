@@ -1,1 +1,7 @@
 .DS_*
+vendor/
+tests/tmp/
+composer.lock
+/.idea
+
+
