@@ -41,9 +41,9 @@ Here is how the markup will look:
     alt="filename is used for alt text">  
 ```  
 
-## Tag Explanation   
+## Usage Walk Through   
 
-To use this Responsive Image Bolt Extension you can either use the defaults above or define a set of rules the the extension config as follows.  
+To use this Responsive Image Bolt Extension you can either use the defaults in the config file or define a set of rules the the extension config as follows.  
   
 1). Give it a Name.
 
@@ -138,6 +138,7 @@ you can override just about any of the following settings from your defined conf
 * widths  
 * heights
 * widthDensity  
+* resolutions ( aka screen density )  
 * sizes  
 * cropping  
 * altText  
@@ -180,7 +181,7 @@ When using multiple in template overrides each one should be separated by a comm
 {{ respImg( record.image, 'blogposts', { 
     'widths': [ 400, 800, 1600 ], 
     'heights': [ 0, 360, 800 ],
-    'widthDensity': 'x',  
+    'widthDensity': 'w',  
     'sizes': [ '(min-width: 40em) 70vw', '100vw' ], 
     'class': 'second class', 
     'cropping': 'resize' 
@@ -195,8 +196,71 @@ When using multiple in template overrides each one should be separated by a comm
 | ---------      | --------   | 
 | widths            | array         | 
 | heights           | array         |  
-| widthDensity      | string        |  
+| widthDensity      | string        | 
+| resolutions       | array         |
 | sizes             | array         |
 | cropping          | string        | 
 | altText           | string        |     
 | class             | array         |  
+
+
+## Responsive Images for Resolution Switching  
+You may have noticed the defaults for this extension use "w" or the width descriptor. I like this one the most. If you only want to create an image for 1x, 2x, and 3x resolutions then this section is for you :-)  
+
+For resolution switching you need to supply at the least 1 piece of information and that would be the "widthDensity" config option. That will need an "x" either in your template or config file.  
+
+```yaml  
+# Config file example  
+yourImageSettings:
+  widthDensity: x  
+```  
+
+```twig  
+{# Twig template example #}  
+{{ respImg( record.image, 'yourImageSettings', { 'widthDensity': 'x' } ) }}  
+```   
+
+After this information is supplied you can then set your resolutions (or densities) you would like.  
+
+```yaml  
+# Config file example  
+yourImageSettings:
+  widthDensity: x  
+  resolutions: [ 1, 2, 3 ]  
+```  
+
+```twig  
+{# Twig template example #}  
+{{ respImg( record.image, 'yourImageSettings', { 'resolutions': [ 1, 2, 3 ] } ) }}  
+```   
+ 
+If no resolutions are supplied and the 'x' descriptor is used the extension will default to three (3) screen densities.    
+
+* 1x  
+* 2x 
+* 3x  
+
+The settings above will also use the widths set in the "default" config section. If you don't change the default widths or set widths in your config settings section your images will be served like so:  
+ 
+ * 1x screens => 320px wide image  
+ * 2x screens => 480px wide image  
+ * 3x screens => 768px wide image  
+ 
+This makes the extension kind of rigid when it comes to defaults but in my opinion there really isn't a good way to set defaults for this.  
+
+### Setting the Image widths  
+To change the widths from the defaults add in "widths" in your config file or template  
+
+```yaml  
+# Config file example  
+yourImageSettings:
+  widths: [ 300, 640, 1000 ]  
+  widthDensity: x  
+  resolutions: [ 1, 2, 3 ]  
+```  
+
+```twig  
+{# Twig template example #}  
+{{ respImg( record.image, 'yourImageSettings', { 'widths': [ 300, 640, 1000 ] } ) }}  
+```  
+
