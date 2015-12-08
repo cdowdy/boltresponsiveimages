@@ -32,11 +32,9 @@ class Extension extends BaseExtension
 	public function respImg( $file, $name, array $options = array() )
 	{
 
-		$pfill = false;
 		// add picturefill if its set to true in the extension config. Defaults to true
 		if ($this->config['picturefill'] == true ) {
 			$this->addAssets();
-			$pfill = true;
 		}
 		// get the config file name if using one. otherwise its 'default'
 		$configName = $this->getConfigName( $name );
@@ -50,14 +48,20 @@ class Extension extends BaseExtension
 
 		$optionsWidths = $this->getOptions( $file, $configName, $options )[ 'widths' ];
 		$optionHeights = $this->getOptions( $file, $configName, $options )[ 'heights' ];
+		$resolutions    = $this->getOptions( $file, $configName, $options )[ 'resolutions'];
 
 		// get the alt text for the Image
 		$altText = $this->getAltText( $configName, $file );
+
 		// get size attribute if using the W descriptor
 		$sizeAttrib = $this->getOptions( $file, $configName, $options )[ 'sizes' ];
 
 		// Combine the Heights and Widths to use for our thumbnail parameters
-		$sizeArray = $this->getCombinedSizes( $optionsWidths, $optionHeights );
+		$sizeArray = $this->getCombinedArray( $optionsWidths, $optionHeights, 0);
+
+		// resolutions (x descriptor) and combined widths heights array
+		$resArray = $this->getCombinedArray( $optionsWidths, $resolutions, 1 );
+
 
 		// get what we need for the cropping parameter
 		$cropping = $this->getOptions( $file, $configName, $options )[ 'cropping' ];
@@ -70,17 +74,20 @@ class Extension extends BaseExtension
 		// place those in an array to be used in the twig template
 		foreach ( $sizeArray as $key => $value ) {
 			$thumb[] .= $this->thumbnail( $file, $key, $value, $cropping );
-			// . ' '. $densityWidth
 		}
 
 		// use the array below if using the W descriptor
 		if ( $densityWidth == 'w' ) {
 			$combinedImages = array_combine( $thumb, $optionsWidths );
 		}
+
+		if ( $densityWidth == 'x' ) {
+			$combinedImages = array_combine( $thumb, $resolutions );
+		}
+
 		// get the smallest (first sizes in the size array) heights and widths for the src image
 		$srcThumbWidth = $this->getOptions( $file, $configName, $options )[ 'widths' ][ 0 ];
 		$srcThumbHeight = $this->getOptions( $file, $configName, $options )[ 'heights' ][ 0 ];
-//		$srcSizeArray = $this->getCombinedSizes( $srcThumbWidth, $srcThumbHeight);
 
 		// if not using picturefill place the smallest image in the "src" attribute of the img tag
 		// <img srcset="" src="smallest image here" alt="alt text" >
@@ -96,10 +103,10 @@ class Extension extends BaseExtension
 			'options' => $defaultOptions,
 			'widthDensity' => $densityWidth,
 			'combinedImages' => $combinedImages,
-			'thumb' => $thumb,
 			'srcThumb' => $srcThumb,
 			'class' => $htmlClass,
-			'pfill' => $pfill
+			'sizeArray' => $sizeArray,
+			'resArray' => $resArray
 
 		) );
 
@@ -164,10 +171,9 @@ class Extension extends BaseExtension
 	{
 
 		$configName = $this->getConfigName( $config );
-//		$defaultWidths   = $this->getImageWidths( $configName);
-//		$defaultHeights = $this->getImageHeights( $configName);
 		$defaultWidths = $this->getWidthsHeights( $configName, 'widths' );
 		$defaultHeights = $this->getWidthsHeights( $configName, 'heights' );
+		$defaultRes = $this->getResolutions( $configName );
 		$cropping = $this->getCropping( $configName );
 		$altText = $this->getAltText( $configName, $filename );
 		$widthDensity = $this->getWidthDensity( $configName );
@@ -180,6 +186,7 @@ class Extension extends BaseExtension
 			'heights' => $defaultHeights,
 			'cropping' => $cropping,
 			'widthDensity' => $widthDensity,
+			'resolutions' => $defaultRes,
 			'sizes' => $sizes,
 			'altText' => $altText,
 			'class' => $class,
@@ -233,65 +240,60 @@ class Extension extends BaseExtension
 		return $configParam;
 	}
 
-	/*
-		function getImageWidths( $config ) {
+	/**
+	 * @param $config
+	 *
+	 * @return array
+	 *
+	 * get the resolutions for resolution switching
+	 */
+	function getResolutions( $config )
+	{
+		$configName = $this->getConfigName( $config );
+		$resOptions = $this->config[ $configName ][ 'resolutions' ];
 
-			$configName = $this->getConfigName( $config );
-			$configWidths = $this->config[ $configName ]['widths'];
-
-			if ( isset( $configWidths ) && !empty($configWidths) ) {
-				$widths = $this->config[$configName]['widths'];
-			} else {
-				$widths = $this->config['default']['widths'];
-			}
-
-			return $widths;
+		if ( isset( $resOptions ) && !empty( $resOptions ) ) {
+			$resolutions = $this->config[ $configName ][ 'resolutions' ];
+		} else {
+			$resolutions = array(
+				1,
+				2,
+				3
+			);
 		}
 
-		function getImageHeights( $config ) {
-
-			// get the config name
-			$configName = $this->getConfigName( $config );
-			// then the config heights
-			$configHeights = $this->config[ $configName ]['heights'];
-
-			if ( isset( $configHeights ) && !empty($configHeights) ) {
-				$heights = $this->config[$configName]['heights'];
-			} else {
-				$heights = $this->config['default']['heights'];
-			}
-
-			return $heights;
-		}*/
+		return $resolutions;
+	}
 
 
 	/**
-	 * @param $widths
-	 * @param $heights
+	 * @param $option1
+	 * @param $option2
+	 * @param $padValue
 	 *
 	 * @return array
 	 */
-	function getCombinedSizes( $widths, $heights )
+	function getCombinedArray( $option1, $option2 , $padValue )
 	{
+		$option1Count = count( $option1 );
+		$option2Count = count( $option2 );
 
-		$widthCount = count( $widths );
-		$heightCount = count( $heights );
-
-		if ( $widthCount != $heightCount ) {
-			$newWidthArray = array_pad( $widths, $heightCount, 0 );
+		if ( $option1Count != $option2Count ) {
+			$option1Array = array_pad( $option1, $option2Count, $padValue );
 		} else {
-			$newWidthArray = $widths;
+			$option1Array = $option1;
 		}
 
-		if ( $heightCount != $widthCount ) {
-			$newHeightArray = array_pad( $heights, $widthCount, 0 );
+		if ( $option2Count != $option1Count ) {
+			$option2Array = array_pad( $option2, $option1Count, $padValue );
 		} else {
-			$newHeightArray = $heights;
+			$option2Array = $option2;
 		}
 
-		$combinedArray = array_combine( $newWidthArray, $newHeightArray );
+		$combinedArray = array_combine( $option1Array, $option2Array );
 
 		return $combinedArray;
+
 	}
 
 
