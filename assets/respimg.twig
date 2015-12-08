@@ -1,14 +1,15 @@
 
 {% if widthDensity == 'w' %}
-    <img {% if class %} class="{% for c in class %}{{ c }}{% endfor %}"{% endif %}
-         sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
-         srcset="{% for img, width in combinedImages %}{{ img }} {{ width }}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"{% if  pfill == false %} src="{{ srcThumb }}"{% endif %}
-         alt="{{ alt }}">
+    <img {% spaceless %}sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
+         srcset="{% for img, width in combinedImages %}{{ img }} {{ width }}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"
+         src="{{ srcThumb }}"
+         alt="{{ alt }}"
+         {% if class %}class="{% for c in class %}{{ c }}{% endfor %}"{% endif %}{% endspaceless %}>
 {% endif %}
 
 {% if widthDensity == 'x' %}
-
-<img {% if class %}class="{% for c in class %}{{ c }}{% endfor %}"{% endif %} srcset="{% for img in thumb %}{{ img }} {{ loop.index }}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"{% if  pfill == false %}
-     src="{{ srcThumb }}"{% endif %}
-     alt="{{ alt }}">
+<img {% spaceless %}srcset="{% for img, density in combinedImages %}{{ img }} {{ density}}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"
+        src="{{ srcThumb }}"
+        alt="{{ alt }}"
+        {% if class %}class="{% for c in class %} {{ c }} {% endfor %}"{% endif %}{% endspaceless %}>
 {% endif %}
