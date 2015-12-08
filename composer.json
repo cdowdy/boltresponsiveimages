@@ -23,7 +23,6 @@
       "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\": ["", "src/"]
     }
   },
-
   "extra": {
     "bolt-assets": "assets"
   }
