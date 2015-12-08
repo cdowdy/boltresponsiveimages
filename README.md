@@ -264,3 +264,12 @@ yourImageSettings:
 {{ respImg( record.image, 'yourImageSettings', { 'widths': [ 300, 640, 1000 ] } ) }}  
 ```  
 
+The resulting img tag will look like so  
+
+```html  
+<img srcset="/your-site/thumbs/300x0r/your-image.jpg 1x, 
+        /your-site/thumbs/640x0r/your-image.jpg 2x,
+        /your-site/thumbs/1000x0r/your-image.jpg 3x" 
+    src="/your-site/thumbs/300x0r/your-image.jpg" 
+    alt="your-image">  
+```  
