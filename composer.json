@@ -24,6 +24,7 @@
     }
   },
   "extra": {
-    "bolt-assets": "assets"
+    "bolt-assets": "assets",
+    "bolt-icon" : "assets/respimg.png"
   }
 }
