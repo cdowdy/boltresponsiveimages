@@ -1,4 +1,4 @@
-# bolt-repsponsive-images  
+# bolt-responsive-images  
 
 
 Responsive Image Extension for Bolt CMS. Using picturefill and img srcset  
@@ -273,3 +273,5 @@ The resulting img tag will look like so
     src="/your-site/thumbs/300x0r/your-image.jpg" 
     alt="your-image">  
 ```  
+
+
