@@ -38,6 +38,7 @@ Here is how the markup will look:
     srcset="/your-site/thumbs/320x0r/filename-here.jpg 320w,
     /your-site/thumbs/480x0r/filename-here.jpg 480w,
     /your-site/thumbs/768x0r/filename-here.jpg 768w"
+    src="/your-site/thumbs/320x0r/filename-here.jpg
     alt="filename is used for alt text">  
 ```  
 
