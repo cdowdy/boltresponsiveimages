@@ -60,7 +60,7 @@ class Extension extends BaseExtension
 		$sizeArray = $this->getCombinedArray( $optionsWidths, $optionHeights, 0);
 
 		// resolutions (x descriptor) and combined widths heights array
-		$resArray = $this->getCombinedArray( $optionsWidths, $resolutions, 1 );
+//		$resArray = $this->getCombinedArray( $optionsWidths, $resolutions, 1 );
 
 
 		// get what we need for the cropping parameter
@@ -82,6 +82,7 @@ class Extension extends BaseExtension
 		}
 
 		if ( $densityWidth == 'x' ) {
+			$resError = $this->resolutionErrors($thumb, $resolutions);
 			$combinedImages = array_combine( $thumb, $resolutions );
 		}
 
@@ -106,7 +107,9 @@ class Extension extends BaseExtension
 			'srcThumb' => $srcThumb,
 			'class' => $htmlClass,
 			'sizeArray' => $sizeArray,
-			'resArray' => $resArray
+
+			// render resolutions errors
+			'resError' => $resError,
 
 		) );
 
@@ -140,24 +143,6 @@ class Extension extends BaseExtension
 
 
 
-	/*	function defaultOptions( $config, $option ) {
-			$configName = $this->getConfigName( $config );
-
-
-			if ( isset( $option ) && !empty( $option ) ) {
-				$defOption = $this->config[$configName][$option];
-			} else {
-				$defOption = $this->config['default'][$option];
-			}
-
-			if ( is_null($option)) {
-				$defOption = $this->config['default'][$option];
-			}
-
-			return $defOption;
-
-		}*/
-
 	/**
 	 * @param       $filename
 	 * @param       $config
@@ -189,7 +174,7 @@ class Extension extends BaseExtension
 			'resolutions' => $defaultRes,
 			'sizes' => $sizes,
 			'altText' => $altText,
-			'class' => $class,
+			'class' => $class
 		);
 
 		$defOptions = array_merge( $defaults, $options );
@@ -263,6 +248,29 @@ class Extension extends BaseExtension
 		}
 
 		return $resolutions;
+	}
+
+	/**
+	 * @param $thumb
+	 * @param $resolutions
+	 *
+	 * @return string
+	 */
+	function resolutionErrors( $thumb, $resolutions ) {
+		$thumbCount = count($thumb);
+		$resCount = count($resolutions);
+
+		if($resCount > $thumbCount) {
+			$resError = 'You Have More Resolutions Set In Your Config Than You Have Thumbnails Being Generated.';
+			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
+		}
+
+		if($resCount < $thumbCount ) {
+			$resError = 'You Have More Thumbnails Being Generated Than You Have Resolutions Set.';
+			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
+		}
+
+		return $resError;
 	}
 
 
@@ -430,6 +438,7 @@ class Extension extends BaseExtension
 			'thumb',
 			array(
 				'thumb' => round( $width ) . 'x' . round( $height ) . $scale . '/' . $filename,
+
 			)
 		);
 
