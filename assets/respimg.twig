@@ -8,8 +8,26 @@
 {% endif %}
 
 {% if widthDensity == 'x' %}
+    {% if resError %}
+        <style>
+            .bg {
+                background: #ff5959;
+                color: #1c2833;
+                padding: 5px 10px;
+                font-size: 24px;
+            }
+        </style>
+        <div class="bg">
+            <p>
+                <strong>
+                    {{ resError }}
+                </strong>
+            </p>
+        </div>
+    {% else %}
 <img {% spaceless %}srcset="{% for img, density in combinedImages %}{{ img }} {{ density}}{{ widthDensity }}{% if not loop.last  %},{% endif %}{% endfor %}"
         src="{{ srcThumb }}"
         alt="{{ alt }}"
         {% if class %}class="{% for c in class %} {{ c }} {% endfor %}"{% endif %}{% endspaceless %}>
+    {% endif %}
 {% endif %}
