@@ -1,9 +1,11 @@
-# bolt-responsive-images  
+# Bolt Responsive Images Extension 
 
 
 Responsive Image Extension for Bolt CMS. Using picturefill and img srcset  
 
-# This is currently in beta :-)  
+You can see a demo page with some real world uses of this extension at the following link:  
+
+[Bolt Responsive Images Extension - In Use](https://corydowdy.com/demo/bolt-responsive-images)
 
 # Quick Usage With Defaults:  
   
@@ -209,6 +211,8 @@ When using multiple in template overrides each one should be separated by a comm
 You may have noticed the defaults for this extension use "w" or the width descriptor. I like this one the most. If you only want to create an image for 1x, 2x, and 3x resolutions then this section is for you :-)  
 
 For resolution switching you need to supply at the least 1 piece of information and that would be the "widthDensity" config option. That will need an "x" either in your template or config file.  
+  
+** if you're using resolution switching the number of widths or heights you want to use should also match the number of resolutions. For 4 images you would also need 4 resolutions**
 
 ```yaml  
 # Config file example  
