@@ -82,8 +82,8 @@ class Extension extends BaseExtension
 		}
 
 		if ( $densityWidth == 'x' ) {
-			$resError = $this->resolutionErrors($thumb, $resolutions);
-			$combinedImages = array_combine( $thumb, $resolutions );
+			$combinedImages = $this->resolutionErrors($thumb, $resolutions);
+
 		}
 
 		// get the smallest (first sizes in the size array) heights and widths for the src image
@@ -106,10 +106,7 @@ class Extension extends BaseExtension
 			'combinedImages' => $combinedImages,
 			'srcThumb' => $srcThumb,
 			'class' => $htmlClass,
-			'sizeArray' => $sizeArray,
-
-			// render resolutions errors
-			'resError' => $resError,
+			'sizeArray' => $sizeArray
 
 		) );
 
@@ -260,14 +257,23 @@ class Extension extends BaseExtension
 		$thumbCount = count($thumb);
 		$resCount = count($resolutions);
 
+		// if the resolutions are more than the thumbnails remove the resolutions to match the thumbnail array
 		if($resCount > $thumbCount) {
-			$resError = 'You Have More Resolutions Set In Your Config Than You Have Thumbnails Being Generated.';
-			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
+//			$resError = 'You Have More Resolutions Set In Your Config Than You Have Thumbnails Being Generated.';
+//			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
+
+			$newResArray = array_slice( $resolutions, 0, $thumbCount);
+			$resError = array_combine( $thumb, $newResArray);
 		}
 
+		// if the resolution count is smaller than the number of thumbnails remove the number of thumbnails
+		// to match the $resCount Array
 		if($resCount < $thumbCount ) {
-			$resError = 'You Have More Thumbnails Being Generated Than You Have Resolutions Set.';
-			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
+//			$resError = 'You Have More Thumbnails Being Generated Than You Have Resolutions Set.';
+//			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
+
+			$newThumbArray = array_slice( $thumb, 0, $resCount);
+			$resError = array_combine($newThumbArray, $resolutions);
 		}
 
 		return $resError;
