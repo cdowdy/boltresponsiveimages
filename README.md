@@ -212,8 +212,7 @@ You may have noticed the defaults for this extension use "w" or the width descri
 
 For resolution switching you need to supply at the least 1 piece of information and that would be the "widthDensity" config option. That will need an "x" either in your template or config file.  
   
-** if you're using resolution switching the number of widths or heights you want to use should also match the number of resolutions. For 4 images you would also need 4 resolutions**
-
+  
 ```yaml  
 # Config file example  
 yourImageSettings:
@@ -279,4 +278,47 @@ The resulting img tag will look like so
     alt="your-image">  
 ```  
 
+## Resolution Switching FYI  
+** if you're using resolution switching the number of widths or heights you want to use should also match the number of resolutions. For 4 images you would also need 4 resolutions. If the number of Resolutions is not the same as the number of Widths or Heights items will be removed to make them match.**  
+
+examples: 
+ 
+ 
+Config with more resolutions than widths set:  
+
+```yaml    
+yourImageSettings:
+  widths: [ 300, 640, 1000 ]  
+  widthDensity: x  
+  resolutions: [ 1, 2, 2.5, 3 ]  
+```  
+
+rendered HTML - the last resolution (3) is removed.    
+
+```html  
+<img srcset="/your-site/thumbs/300x0r/your-image.jpg 1x, 
+        /your-site/thumbs/640x0r/your-image.jpg 2x,
+        /your-site/thumbs/1000x0r/your-image.jpg 2.5x" 
+    src="/your-site/thumbs/300x0r/your-image.jpg" 
+    alt="your-image">  
+```  
+
+More Widths than Resolutions:  
+
+```yaml    
+yourImageSettings:
+  widths: [ 300, 640, 800, 1000 ]  
+  widthDensity: x  
+  resolutions: [ 1, 2, 3 ]  
+``` 
+
+rendered HTML - the last width (1000) is removed.    
+
+```html  
+<img srcset="/your-site/thumbs/300x0r/your-image.jpg 1x, 
+        /your-site/thumbs/640x0r/your-image.jpg 2x,
+        /your-site/thumbs/800x0r/your-image.jpg 3x" 
+    src="/your-site/thumbs/300x0r/your-image.jpg" 
+    alt="your-image">  
+```  
 
