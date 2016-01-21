@@ -32,3 +32,20 @@ articles:
   cropping: fit
   altText:
   class:
+
+
+# ----------------------------------------------------------------------------------
+#     More Examples
+# ----------------------------------------------------------------------------------
+
+# Screen Density Example
+# 1. Set our own widths
+# 2. Use 0 for heights
+# 3. Set our own resolutions
+
+
+screenDensity:
+  widths: [ 300, 600, 800, 1200 ]
+  heights: [ 0 ]
+  widthDensity: 'x'
+  resolutions: [ 1, 2, 2.5, 3 ]
