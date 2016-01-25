@@ -23,6 +23,12 @@
       "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\": ["", "src/"]
     }
   },
+  "autoload-dev" : {
+    "psr-4" : {
+      "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\tests\\" : "tests/",
+      "Bolt\\Tests\\" : "vendor/bolt/bolt/tests/phpunit/unit/"
+    }
+  },
   "extra": {
     "bolt-assets": "assets",
     "bolt-icon" : "assets/respimg.png"
