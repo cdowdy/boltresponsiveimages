@@ -6,4 +6,6 @@
 
 namespace Bolt\Extension\cdowdy\boltresponsiveimages;
 
-$app['extensions']->register(new Extension($app));
+if (isset($app)) {
+	$app['extensions']->register(new Extension($app));
+}
