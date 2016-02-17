@@ -276,6 +276,11 @@ class Extension extends BaseExtension
             $resError = array_combine($newThumbArray, $resolutions);
         }
 
+        if ($resCount === $thumbCount ) {
+            $resError = array_combine( $thumb, $resolutions);
+        }
+
+
         return $resError;
     }
 
