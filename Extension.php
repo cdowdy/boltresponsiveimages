@@ -477,12 +477,6 @@ PFILL;
             // insert snippet after the last CSS file in the head
             $this->addSnippet('afterheadcss', $pictureFill);
         }
-        // for browsers that don't understand <picture> element
-//        $picElement = <<<PICELEM
-//<script>document.createElement( "picture" );</script>
-//PICELEM;
-//        // insert snippet after the last CSS file in the head
-//        $this->addSnippet( 'afterheadcss', $picElement );
     }
 
 
