@@ -5,9 +5,6 @@ namespace Bolt\Extension\cdowdy\boltresponsiveimages;
 
 use Bolt\Application;
 use Bolt\BaseExtension;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\AcceptHeader;
 use Bolt\Thumbs;
 
 class Extension extends BaseExtension
