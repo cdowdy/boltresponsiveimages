@@ -5,7 +5,11 @@ Responsive Image Extension for Bolt CMS. Using picturefill and img srcset
 
 You can see a demo page with some real world uses of this extension at the following link:  
 
-[Bolt Responsive Images Extension - In Use](https://corydowdy.com/demo/bolt-responsive-images)
+[Bolt Responsive Images Extension - In Use](https://corydowdy.com/demo/bolt-responsive-images)  
+
+and use this Tool to help you get your responsive image widths!  
+
+* [Responsive Images Breakpoint Generator](http://www.responsivebreakpoints.com/)
 
 # Quick Usage With Defaults:  
   
