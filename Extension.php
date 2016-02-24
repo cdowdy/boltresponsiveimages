@@ -11,6 +11,7 @@ class Extension extends BaseExtension
 {
 
     private $_currentPictureFill = '3.0.1';
+    private $_currentLazySizes = '1.4.0';
 
     public function initialize()
     {
@@ -33,6 +34,8 @@ class Extension extends BaseExtension
         if ($this->config[ 'picturefill' ] == true) {
             $this->addAssets();
         }
+
+
         // get the config file name if using one. otherwise its 'default'
         $configName = $this->getConfigName($name);
 
@@ -41,29 +44,59 @@ class Extension extends BaseExtension
 
 
         // if a class is set in the config or options pass it to the template
-        $htmlClass = $this->getOptions($file, $configName, $options)[ 'class' ];
+        $htmlClass = $defaultOptions[ 'class' ];
 
-        $optionsWidths = $this->getOptions($file, $configName, $options)[ 'widths' ];
-        $optionHeights = $this->getOptions($file, $configName, $options)[ 'heights' ];
-        $resolutions = $this->getOptions($file, $configName, $options)[ 'resolutions' ];
+        // test for lazyload
+        $lazy = $defaultOptions['lazyLoad'];
+        
+        
+        // add the class "lazyload" to the class array in the template or config
+        // also load the lazysizes script in the head with an async tag
+        if ($lazy) {
+            $htmlClass[] = 'lazyload';
+            $this->lazyLoadScript();
+        }
+        /**
+         * other options here.
+         *
+         * could take the config classes and merge them with the classes passed in the template
+         * so that config classes carry over into the template overrides
+         *
+         * this would mean that a twig function
+         * {{ respImg( record.image, 'default', { class: [ htmlClass] }) }}
+         * would produce :
+         * <img class=" configClass  htmlClass ">
+         * 
+         * $tempClass = $defaultOptions[ 'class' ];
+         * $configClass = $this->config[ $configName ]['class'];
+         *
+         * if ( $tempClass != $configClass ) {
+         *  $htmlClass = array_merge($tempClass, $configClass);
+         * } else {
+         *  $htmlClass = $tempClass;
+         * }
+         *
+         */
+
+        $optionsWidths = $defaultOptions[ 'widths' ];
+        $optionHeights = $defaultOptions[ 'heights' ];
+        $resolutions = $defaultOptions[ 'resolutions' ];
 
         // get the alt text for the Image
-        $altText = $this->getAltText($configName, $file);
+        // $altText = $this->getAltText($configName, $file);
+        $altText = $defaultOptions['altText'];
 
         // get size attribute if using the W descriptor
-        $sizeAttrib = $this->getOptions($file, $configName, $options)[ 'sizes' ];
+        $sizeAttrib = $defaultOptions[ 'sizes' ];
 
         // Combine the Heights and Widths to use for our thumbnail parameters
         $sizeArray = $this->getCombinedArray($optionsWidths, $optionHeights, 0);
 
-        // resolutions (x descriptor) and combined widths heights array
-//		$resArray = $this->getCombinedArray( $optionsWidths, $resolutions, 1 );
-
 
         // get what we need for the cropping parameter
-        $cropping = $this->getOptions($file, $configName, $options)[ 'cropping' ];
+        $cropping = $defaultOptions[ 'cropping' ];
 
-        $densityWidth = $this->getOptions($file, $configName, $options)[ 'widthDensity' ];
+        $densityWidth = $defaultOptions[ 'widthDensity' ];
 
         // make thumbs an empty array
         $thumb = array();
@@ -80,12 +113,11 @@ class Extension extends BaseExtension
 
         if ($densityWidth == 'x') {
             $combinedImages = $this->resolutionErrors($thumb, $resolutions);
-
         }
 
         // get the smallest (first sizes in the size array) heights and widths for the src image
-        $srcThumbWidth = $this->getOptions($file, $configName, $options)[ 'widths' ][ 0 ];
-        $srcThumbHeight = $this->getOptions($file, $configName, $options)[ 'heights' ][ 0 ];
+        $srcThumbWidth = $defaultOptions[ 'widths' ][ 0 ];
+        $srcThumbHeight = $defaultOptions[ 'heights' ][ 0 ];
 
         // if not using picturefill place the smallest image in the "src" attribute of the img tag
         // <img srcset="" src="smallest image here" alt="alt text" >
@@ -103,7 +135,8 @@ class Extension extends BaseExtension
             'combinedImages' => $combinedImages,
             'srcThumb' => $srcThumb,
             'class' => $htmlClass,
-            'sizeArray' => $sizeArray
+            'sizeArray' => $sizeArray,
+            'lazy' => $lazy
 
         ));
 
@@ -157,6 +190,7 @@ class Extension extends BaseExtension
         $widthDensity = $this->getWidthDensity($configName);
         $sizes = $this->getSizesAttrib($configName);
         $class = $this->getHTMLClass($configName);
+        $lazyLoaded = $this->setLazyLoad($configName);
 
 
         $defaults = array(
@@ -167,7 +201,9 @@ class Extension extends BaseExtension
             'resolutions' => $defaultRes,
             'sizes' => $sizes,
             'altText' => $altText,
+            'lazyLoad' => $lazyLoaded,
             'class' => $class
+
         );
 
         $defOptions = array_merge($defaults, $options);
@@ -256,9 +292,6 @@ class Extension extends BaseExtension
 
         // if the resolutions are more than the thumbnails remove the resolutions to match the thumbnail array
         if ($resCount > $thumbCount) {
-//			$resError = 'You Have More Resolutions Set In Your Config Than You Have Thumbnails Being Generated.';
-//			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
-
             $newResArray = array_slice($resolutions, 0, $thumbCount);
             $resError = array_combine($thumb, $newResArray);
         }
@@ -266,9 +299,6 @@ class Extension extends BaseExtension
         // if the resolution count is smaller than the number of thumbnails remove the number of thumbnails
         // to match the $resCount Array
         if ($resCount < $thumbCount) {
-//			$resError = 'You Have More Thumbnails Being Generated Than You Have Resolutions Set.';
-//			$resError .= ' Add More Resolutions Or Remove A Width Or Height To Remove This Warning';
-
             $newThumbArray = array_slice($thumb, 0, $resCount);
             $resError = array_combine($newThumbArray, $resolutions);
         }
@@ -324,9 +354,9 @@ class Extension extends BaseExtension
         $widthDensity = $this->config[ $configName ][ 'widthDensity' ];
 
         if (isset($widthDensity) && !empty($widthDensity)) {
-            $wd = $this->config[ $configName ][ 'widthDensity' ];
+            $wd = strtolower($this->config[ $configName ][ 'widthDensity' ]);
         } else {
-            $wd = $this->config[ 'default' ][ 'widthDensity' ];
+            $wd = strtolower($this->config[ 'default' ][ 'widthDensity' ]);
         }
 
         return $wd;
@@ -380,13 +410,37 @@ class Extension extends BaseExtension
         $configName = $this->getConfigName($config);
         $htmlClass = $this->config[ $configName ][ 'class' ];
 
-        if (isset($htmlClass) && !empty($htmlClass)) {
-            $class = $this->config[ $configName ][ 'class' ];
-        } else {
-            $class = $this->config[ 'default' ][ 'class' ];
+        $class = $this->config[ 'default' ][ 'class' ];
+
+        // if a class array is in the config set the $class variable to the class array
+        if ( isset($htmlClass ) ) {
+            $class = $htmlClass;
         }
 
         return $class;
+    }
+
+    function setLazyLoad($config) {
+
+        $configName = $this->getConfigName($config);
+        $lazyLoad = $this->config[ $configName ]['lazyLoad'];
+
+
+        if ($lazyLoad) {
+
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    function lazyLoadScript() {
+        $lazySizesJS = $this->getBaseUrl() . 'js/lazysizes/' . $this->_currentLazySizes . '/lazysizes.min.js';
+        $lazySizes = <<<LAZYLOAD
+<script src="{$lazySizesJS}" async ></script>
+LAZYLOAD;
+        // insert snippet after the last CSS file in the head
+        $this->addSnippet('afterheadcss', $lazySizes);
     }
 
     /**
