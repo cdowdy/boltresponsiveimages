@@ -326,3 +326,34 @@ rendered HTML - the last width (1000) is removed.
     alt="your-image">  
 ```  
 
+## lazy Loading Images  
+
+You can enable lazyloading of images in the config or templates. The lazyloading library that is used is [LazySizes](https://github.com/aFarkas/lazysizes).  
+
+To enable it from the config add lazyLoad: true to the extension config like so. As of right now you __won't__ need to enter any sizes. With lazyloading enabled the sizes will default to "auto".    
+
+```yaml  
+yourImageSettings:
+  widths: [ 340, 680, 1260 ]
+  heights: [ 0 ]  
+  widthDensity: 'w'
+  cropping: resize  
+  lazyLoad: true
+```  
+
+If you have ```lazyLoad: false``` in your config settings but would like to override a particular image or images in your templates do it as follows.  
+
+```yaml  
+yourImageSettings:
+  # other settings
+  lazyLoad: false
+  # alternatively you don't have to have lazyLoad in your config settings.
+```  
+
+Then in your template:  
+
+```twig  
+{# Twig template example #}  
+{{ respImg( record.image, 'yourImageSettings', { 'lazyLoad': true } ) }}  
+```  
+
