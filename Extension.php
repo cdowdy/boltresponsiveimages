@@ -15,7 +15,9 @@ class Extension extends BaseExtension
 
     public function initialize()
     {
-        $this->addTwigFunction('respImg', 'respImg');
+        if ( $this->app['config']->getWhichEnd() == 'frontend' ) {
+            $this->addTwigFunction('respImg', 'respImg');
+        }
     }
 
     /**
@@ -125,7 +127,6 @@ class Extension extends BaseExtension
 
         // load up twig template directory
         $this->app[ 'twig.loader.filesystem' ]->addPath(__DIR__ . "/assets");
-
 
         $renderImg = $this->app[ 'render' ]->render('respimg.twig', array(
             'alt' => $altText,
@@ -506,6 +507,19 @@ LAZYLOAD;
 
         return $path;
     }
+   
+
+//    /* create a low quality image placeholder */
+//    function lqip( $file, $width, $height )
+//    {
+//
+//        $newResizer = new Thumbs\ThumbnailResponder();
+////
+//        $quality = $this->app['config']->get('general/thumbnails/quality') / 2;
+//
+//        $newResizer->initialize()
+//            ->quality = $quality;
+//    }
 
     /**
      * Add Picturefill to the current page!!!
