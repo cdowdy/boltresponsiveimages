@@ -2,14 +2,17 @@
   "name": "cdowdy/boltresponsiveimages",
   "description": "A Bolt Extension To Create Responsive Images.",
   "type": "bolt-extension",
-  "keywords": ["srcset", "responsive images"],
+  "keywords": [
+    "srcset",
+    "responsive images",
+    "picturefill"
+  ],
   "require": {
-    "bolt/bolt": ">=2.0,<3.0"
+    "bolt/bolt": "^3.0"
   },
-  "require-dev" : {
-    "phpunit/phpunit" : "^4.7"
+  "require-dev": {
+    "phpunit/phpunit": "^4.7"
   },
-
   "license": "MIT",
   "authors": [
     {
@@ -17,24 +20,26 @@
       "email": "cory@corydowdy.com"
     }
   ],
-  "minimum-stability" : "dev",
-  "prefer-stable" : true,
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
-    "files": [
-      "init.php"
-    ],
     "psr-4": {
-      "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\": ["", "src/"]
+      "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\": "src"
     }
   },
-  "autoload-dev" : {
-    "psr-4" : {
-      "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\tests\\" : "tests/",
-      "Bolt\\Tests\\" : "vendor/bolt/bolt/tests/phpunit/unit/"
+  "autoload-dev": {
+    "psr-4": {
+      "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\Tests\\": "tests",
+      "Bolt\\Tests\\": "vendor/bolt/bolt/tests/phpunit/unit/"
     }
   },
   "extra": {
-    "bolt-assets": "assets",
-    "bolt-icon" : "assets/respimg.png"
+    "bolt-assets": "web",
+    "bolt-class": "Bolt\\Extension\\cdowdy\\boltresponsiveimages\\BoltResponsiveImagesExtension",
+    "bolt-icon": "resp-icon.png",
+    "bolt-screenshots": [
+      "screenshots/screenshot1.png",
+      "screenshots/screenshot2.png"
+    ]
   }
 }
