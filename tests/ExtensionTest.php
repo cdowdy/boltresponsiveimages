@@ -3,7 +3,7 @@
 namespace Bolt\Extension\cdowdy\boltresponsiveimages\Tests;
 
 use Bolt\Tests\BoltUnitTest;
-use Bolt\Extension\cdowdy\boltresponsiveimages\Extension;
+use Bolt\Extension\cdowdy\boltresponsiveimages\BoltResponsiveImagesExtension;
 
 /**
  * Ensure that the ExtensionName extension loads correctly.
