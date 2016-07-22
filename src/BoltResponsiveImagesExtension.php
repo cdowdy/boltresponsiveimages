@@ -531,7 +531,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
         $vendor = 'vendor/cdowdy/';
         $extName = 'boltresponsiveimages/';
 
-        $pictureFillJS = $extPath . $vendor . $extName . 'js/picturefill/' . $this->_currentPictureFill . '/picturefill.min.js';
+        $pictureFillJS = $extPath . $vendor . $extName . 'picturefill/' . $this->_currentPictureFill . '/picturefill.min.js';
         $pictureFill = <<<PFILL
 <script src="{$pictureFillJS}" async defer></script>
 PFILL;
