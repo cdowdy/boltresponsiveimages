@@ -25,7 +25,7 @@
     Pass the combined images array,
     gather the descriptors from the descriptor macro with the import statement
 #}
-{% macro srcset( combinedImages, desc, widthDensity, lazy ) %}
+{% macro srcset( combinedImages, widthDensity, lazy ) %}
     {% import _self as wd %}
 
     {% if lazy %}data-{% endif %}srcset="{% for img, width in combinedImages %}{{ img }} {{ wd.descriptor( width, widthDensity) }}{% if not loop.last  %},{% endif %}{% endfor %}"
@@ -58,12 +58,12 @@
     and import them into this macro (_self) and give it a name (build)
 #}
 
-{% macro buildSrcs( srcThumb, combinedImages, desc, widthDensity, sizes, lazy) %}
+{% macro buildSrcs( srcThumb, combinedImages, widthDensity, sizes, lazy) %}
     {% import _self as build %}
 
     {% spaceless %}
         {% if widthDensity == 'w' %}{{ build.sizes( sizes, lazy) }}{% endif %}
-        {{ build.srcset(combinedImages, width, widthDensity, lazy) }}
+        {{ build.srcset(combinedImages, widthDensity, lazy) }}
         {{ build.thumb(srcThumb, lazy) }}
     {% endspaceless %}
 {% endmacro %}
@@ -74,6 +74,6 @@
 #}
 {% import _self as attrib %}
 
-<img {{ attrib.buildSrcs(srcThumb, combinedImages, desc, widthDensity, sizes, lazy) }}
+<img {{ attrib.buildSrcs(srcThumb, combinedImages, widthDensity, sizes) }}
         alt="{{ alt }}"
         {{ attrib.className( class ) }}>
