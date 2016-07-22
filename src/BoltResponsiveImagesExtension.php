@@ -361,13 +361,15 @@ class BoltResponsiveImagesExtension extends SimpleExtension
     {
         $configName = $this->getConfigName($config);
         $config = $this->getConfig();
-        $sizes = $config[ $configName ][ 'sizes' ];
+        $default = $this->getDefaultConfig();
 
-        if (isset($sizes) && !empty($sizes)) {
-            $sizesAttrib = $config[ $configName ][ 'sizes' ];
-        } else {
-            $sizesAttrib = $config[ 'default' ][ 'sizes' ];
-        }
+        $sizesAttrib = $this->checkConfig($config[$configName], 'sizes', $default);
+
+//        if (isset($sizes) && !empty($sizes)) {
+//            $sizesAttrib = $config[ $configName ][ 'sizes' ];
+//        } else {
+//            $sizesAttrib = $config[ 'default' ][ 'sizes' ];
+//        }
 
         return $sizesAttrib;
     }
@@ -383,8 +385,8 @@ class BoltResponsiveImagesExtension extends SimpleExtension
 
         $configName = $this->getConfigName($config);
         $configFile = $this->getConfig();
-        $altText = $configFile[ $configName ][ 'altText' ];
 
+        $altText = $this->checkIndex($configFile[$configName], 'altText', NULL);
         if (empty($altText)) {
             $tempAltText = pathinfo($filename);
             $altText = $tempAltText[ 'filename' ];
@@ -427,17 +429,25 @@ class BoltResponsiveImagesExtension extends SimpleExtension
     {
         $configName = $this->getConfigName($config);
         $configFile = $this->getConfig();
-        $resOptions = $configFile[ $configName ][ 'resolutions' ];
+//        $resOptions = $configFile[ $configName ][ 'resolutions' ];
 
-        if (isset($resOptions) && !empty($resOptions)) {
-            $resolutions = $configFile[ $configName ][ 'resolutions' ];
-        } else {
-            $resolutions = array(
-                1,
-                2,
-                3
-            );
-        }
+        $defaultResolutions = [
+            1,
+            2,
+            3
+        ];
+
+        $resolutions = $this->checkIndex( $configFile[$config], 'resolutions', $defaultResolutions);
+
+//        if (isset($resOptions) && !empty($resOptions)) {
+//            $resolutions = $configFile[ $configName ][ 'resolutions' ];
+//        } else {
+//            $resolutions = array(
+//                1,
+//                2,
+//                3
+//            );
+//        }
 
         return $resolutions;
     }
@@ -517,14 +527,14 @@ class BoltResponsiveImagesExtension extends SimpleExtension
     {
         $configName = $this->getConfigName($config);
         $config = $this->getConfig();
-        $htmlClass = $config[ $configName ][ 'class' ];
+//        $htmlClass = $config[ $configName ][ 'class' ];
 
-        $class = $config[ 'default' ][ 'class' ];
+        $class = $this->checkIndex( $config[$configName], 'class', NULL);
 
         // if a class array is in the config set the $class variable to the class array
-        if ( isset($htmlClass ) ) {
-            $class = $htmlClass;
-        }
+//        if ( isset($htmlClass ) ) {
+//            $class = $htmlClass;
+//        }
 
         return $class;
     }
