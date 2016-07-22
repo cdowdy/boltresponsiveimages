@@ -149,6 +149,28 @@ class BoltResponsiveImagesExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
+    /**
+     * @param $configOption
+     * @param $configType
+     * @param $defaultConfig
+     * @return mixed
+     */
+    protected function checkConfig ( $configOption, $configType, $defaultConfig )
+    {
+        return ( isset( $configOption[$configType]) ? $configOption[$configType] : $defaultConfig['default'][$configType] );
+    }
+
+    /**
+     * @param $option
+     * @param $optionType
+     * @param $fallback
+     * @return mixed
+     */
+    protected function checkIndex( $option, $optionType, $fallback )
+    {
+        return ( isset( $option[$optionType]) ? $option[$optionType] : $fallback );
+    }
+
 
     /**
      * @param null $fileName
@@ -281,8 +303,10 @@ class BoltResponsiveImagesExtension extends SimpleExtension
      */
     function getOptions($filename, $config, $options = array())
     {
-
+        $cfg = $this->getConfig();
+        $defaultConfig = $this->getDefaultConfig();
         $configName = $this->getConfigName($config);
+
         $defaultWidths = $this->getWidthsHeights($configName, 'widths');
         $defaultHeights = $this->getWidthsHeights($configName, 'heights');
         $defaultRes = $this->getResolutions($configName);
@@ -321,13 +345,9 @@ class BoltResponsiveImagesExtension extends SimpleExtension
     {
         $configName = $this->getConfigName($config);
         $config = $this->getConfig();
-        $cropping = $config[ $configName ][ 'cropping' ];
+        $default = $this->getDefaultConfig();
 
-        if (isset($cropping) && !empty($cropping)) {
-            $crop = $config[ $configName ][ 'cropping' ];
-        } else {
-            $crop = $config[ 'default' ][ 'cropping' ];
-        }
+        $crop = $this->checkConfig($config[$configName], 'cropping', $default);
 
         return $crop;
     }
