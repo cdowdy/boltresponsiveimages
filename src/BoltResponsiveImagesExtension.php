@@ -39,7 +39,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
     protected function registerTwigFunctions()
     {
         $options = ['is_safe' => ['html']];
-
+        $this->getConfig();
         return [
             'respImg' => ['respImg',  $options ]
         ];
