@@ -1,0 +1,69 @@
+{#
+    Get a descriptor, width or screen density along with the appropriate x or w
+#}
+{% macro descriptor( desc, widthDensity ) %}
+    {%  spaceless %}
+        {{ desc }}{{ widthDensity }}
+    {% endspaceless %}
+{% endmacro %}
+
+{#
+    Get the Sizes being passed from the template or from the config
+    and loop through each size in the sizes array
+#}
+
+{% macro sizes( sizes, lazy ) %}
+    {% if lazy %}
+        data-sizes="auto"
+    {% else %}
+        sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
+    {% endif %}
+{% endmacro %}
+
+{#
+    create a srcset attribute and import the descriptor() macro.
+    Pass the combined images array,
+    gather the descriptors from the descriptor macro with the import statement
+#}
+{% macro srcset( combinedImages, widthDensity, lazy ) %}
+    {% import _self as wd %}
+
+    {% if lazy %}data-{% endif %}srcset="{% for img, width in combinedImages %}{{ img }} {{ wd.descriptor( width, widthDensity) }}{% if not loop.last  %},{% endif %}{% endfor %}"
+{% endmacro %}
+
+{#
+    gather the class array from the template or the config file and loop
+    over the contents in the array
+#}
+{% macro className( class ) %}
+    {% if class %}class="{% for c in class %} {{ c }} {% endfor %}"{% endif %}
+{% endmacro %}
+
+{#
+    build an image source string. get the srcThumb passed from $srcThumb. Should be the smallest image.
+
+    TODO: I don't really like the blank base64 image as the data-src. Change it to a low quality img or fallback thumb
+#}
+{% macro thumb( srcThumb, lazy ) %}
+    {% if lazy %}
+        data-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    {% else %}
+        src="{{ srcThumb }}"
+    {% endif %}
+{% endmacro %}
+
+
+{#
+    Build the sizes string if used (macro sizes), the srcset (macro srcset) and the src thumb (macro thumb) from the above macros
+    and import them into this macro (_self) and give it a name (build)
+#}
+
+{% macro buildSrcs( srcThumb, combinedImages, widthDensity, sizes, lazy) %}
+    {% import _self as build %}
+
+    {% spaceless %}
+        {% if widthDensity == 'w' %}{{ build.sizes( sizes, lazy) }}{% endif %}
+        {{ build.srcset(combinedImages, widthDensity, lazy) }}
+        {{ build.thumb(srcThumb, lazy) }}
+    {% endspaceless %}
+{% endmacro %}
