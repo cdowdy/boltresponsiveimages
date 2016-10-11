@@ -12,6 +12,8 @@ use Bolt\Filesystem\Handler\ImageInterface;
 use Bolt\Filesystem\Handler\NullableImage;
 use Bolt\Helpers\Image\Thumbnail;
 
+
+
 /**
  * BoltResponsiveImages extension class.
  *
@@ -44,6 +46,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
             'respImg' => ['respImg',  $options ]
         ];
     }
+
 
 
     /**
@@ -129,7 +132,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
         // if not using picturefill place the smallest image in the "src" attribute of the img tag
         // <img srcset="" src="smallest image here" alt="alt text" >
         $srcThumb = $this->thumbnail($file, $srcThumbWidth, $srcThumbHeight, $cropping);
-        
+
 
         $context = [
             'config' => $configName,
@@ -407,7 +410,10 @@ class BoltResponsiveImagesExtension extends SimpleExtension
 
         $configName = $this->getConfigName($config);
         $configFile = $this->getConfig();
-        $configOption = $configFile[ $configName ][ $option ];
+        $default = $this->getDefaultConfig();
+//        $configOption = $this->checkConfig($configFile[$configName], $option, $default);
+//        $configOption = $configFile[ $configName ][ $option ];
+        $configOption = isset($configFile[$configName][$option]);
 
         if (isset($configOption) && !empty($configOption)) {
             $configParam = $configFile[ $configName ][ $option ];
@@ -492,7 +498,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
     {
         $configName = $this->getConfigName($config);
         $configFile = $this->getConfig();
-        $widthDensity = $configFile[ $configName ][ 'widthDensity' ];
+        $widthDensity = isset($configFile[ $configName ][ 'widthDensity' ]);
 
         if (isset($widthDensity) && !empty($widthDensity)) {
             $wd = strtolower($configFile[ $configName ][ 'widthDensity' ]);
@@ -539,6 +545,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
         return $class;
     }
 
+
     /**
      * You can't rely on bolts methods to insert javascript/css in the location you want.
      * So we have to hack around it. Use the Snippet Class with their location methods and insert
@@ -570,16 +577,17 @@ PFILL;
             ->setZone(ZONE::FRONTEND)
             ->setLocation(Target::AFTER_HEAD_CSS);
 
-        // variable to check if script is added to the page
 
-       if ($pfill){
-           if ($this->_scriptAdded) {
-               $app['asset.queue.snippet']->add($asset);
-           } else {
+        // add picturefill script only once for each time the extension is used
+        if ($pfill){
+            if ($this->_scriptAdded == FALSE ) {
+                $app['asset.queue.snippet']->add($asset);
+                $this->_scriptAdded = TRUE;
+            } else {
 
-               $this->_scriptAdded = TRUE;
-           }
-       }
+                $this->_scriptAdded = TRUE;
+            }
+        }
     }
 
 
