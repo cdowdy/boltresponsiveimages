@@ -67,7 +67,7 @@ class BoltResponsiveImagesExtension extends SimpleExtension
 
 
         // if a class is set in the config or options pass it to the template
-        $htmlClass = $defaultOptions[ 'class' ];
+        $htmlClass[] = $defaultOptions[ 'class' ];
 
         // test for lazyload
 //        $lazy = $defaultOptions['lazyLoad'];
