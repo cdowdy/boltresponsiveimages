@@ -128,6 +128,22 @@ blogposts:
   altText:
   class:  
 ```  
+
+In instances where you would rather have no alternative text, or the text is considered "redundant", you can turn off alt text by using a tilde (~) in the extensions config or the word `FLASE` in your templates. To help determine if your alt text is redundant or sufficient see [http://webaim.org/techniques/alttext/#context](http://webaim.org/techniques/alttext/#context)
+
+config use:  
+
+```yaml  
+blogposts:  
+  #other settings here  
+  altText: ~ 
+```  
+
+template use:  
+```twig  
+{{ respImg( record.image, 'blogposts', { 'altText': FALSE } ) }} 
+```
+
  
 After you have your settings in the config file you can now use these in your templates wherever you want responsive images.  
 
