@@ -2,9 +2,7 @@
     Get a descriptor, width or screen density along with the appropriate x or w
 #}
 {% macro descriptor( desc, widthDensity ) %}
-    {%  spaceless %}
-        {{ desc }}{{ widthDensity }}
-    {% endspaceless %}
+{%  spaceless %}{{ desc }}{{ widthDensity }}{% endspaceless %}
 {% endmacro %}
 
 {#
