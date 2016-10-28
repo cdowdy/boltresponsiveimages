@@ -408,9 +408,14 @@ class BoltResponsiveImagesExtension extends SimpleExtension
         $configFile = $this->getConfig();
 
         $altText = $this->checkIndex($configFile[$configName], 'altText', NULL);
-        if (empty($altText)) {
+
+        if ($altText == '~') {
+            $altText = '' ;
+        } elseif (empty($altText)) {
             $tempAltText = pathinfo($filename);
             $altText = $tempAltText[ 'filename' ];
+        } else {
+            $altText = $configFile[$configName]['altText'];
         }
 
         return $altText;
