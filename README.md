@@ -9,7 +9,20 @@ You can see a demo page with some real world uses of this extension at the follo
 
 and use this Tool to help you get your responsive image widths!  
 
-* [Responsive Images Breakpoint Generator](http://www.responsivebreakpoints.com/)
+* [Responsive Images Breakpoint Generator](http://www.responsivebreakpoints.com/)  
+
+## NOTICE:  
+a recent change to Bolt may strip certain tags from the rendered output. You'll need to add these to your Bolt Config. [Here is the relevant section in the config](https://github.com/bolt/bolt/blob/868e36f2961a98745131c1f0b2b13f711deb6345/app/config/config.yml.dist#L221-L223)  
+
+```html  
+allowed_attributes: [ sizes, srcset, ... other attributes ]
+```   
+
+If you're using a lazyload pattern, or data-attributes you'll also need to add those to the allowed attributes section the data-attributes if those are used. IE:  
+
+```html  
+allowed_attributes: [ sizes, srcset,data-src, data-srcset, data-your-attribute, ... other attributes ]
+```
 
 # Quick Usage With Defaults:  
   
